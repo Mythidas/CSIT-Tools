@@ -1,23 +1,35 @@
 'use client'
 
-import Dropdown from "../components/Dropdown";
+import { useState } from "react";
+import Dropdown, { DropdownItem } from "../components/Dropdown";
 import VSAXClient from "../lib/VSAXClient";
+import { test_site_list } from "./test_data";
 
 export default function Computers() {
+  const [selected_tab, set_selected_tab] = useState<string>("Overview");
+
   async function on_click() {
     let vsa: VSAXClient = new VSAXClient;
     const sites = await vsa.get_sites();
   }
 
+  function on_site_changed(item: DropdownItem) {
+    console.log(item.id);
+  }
+
+  function on_tab_selected(tab: string) {
+    set_selected_tab(tab);
+  }
+
   return (
-    <main className="flex h-screen flex-col items-center bg-bgcol-100">
+    <main className="flex h-screen flex-col items-center bg-cscol-500">
       { /* Nav Bar */ }
-      <div className="flex justify-between w-full p-5 font-bold text-2xl text-accol-100 bg-bgcol-300">
+      <div className="flex justify-between w-full p-3 font-bold text-2xl text-accol-100 bg-cscol-200 text-cscol-100">
         <div>
-          <Dropdown />
+          <Dropdown items={test_site_list} on_item_changed={on_site_changed} />
         </div>
-        <div>
-          <a href="/">
+        <div className="flex items-center">
+          <a className="hover:text-cscol-400" href="/">
             Home
           </a>
         </div>
@@ -25,12 +37,17 @@ export default function Computers() {
       { /* Body */ }
       <div className="flex w-full h-full">
         { /* Side Bar */ }
-        <div className="flex items-center flex-col w-2/12 h-full py-5 px-10 bg-bgcol-200">
-          Side Bar
-        </div>
+        <ul className="flex items-center flex-col w-2/12 h-full bg-cscol-100 text-cscol-500 text-lg font-bold">
+          <li className={`p-5 w-full text-center shadow-md cursor-pointer hover:bg-cscol-300 ${selected_tab === "Overview" && "bg-cscol-400 text-cscol-100 hover:bg-cscol-400"}`} onClick={() => on_tab_selected("Overview")}>
+            Overview
+          </li>
+          <li className={`p-5 w-full text-center shadow-md cursor-pointer hover:bg-cscol-300 ${selected_tab === "Detailed" && "bg-cscol-400 text-cscol-100 hover:bg-cscol-400"}`} onClick={() => on_tab_selected("Detailed")}>
+            Detailed
+          </li>
+        </ul>
         { /* Main Page */ }
-        <div className="py-5 px-10 w-full h-full shadow-[inset_0_-2px_4px_rgba(0,0,0,0.6)]">
-          Main Page
+        <div className="py-5 px-10 w-full h-full shadow-[inset_0_-2px_6px_rgba(0,0,0,0.4)]">
+          {selected_tab}
         </div>
       </div>
     </main>

@@ -8,11 +8,11 @@ const config: Config = {
   ],
   theme: {
     colors: {
-      "bgcol-100": "#6B6E70",
-      "bgcol-200": "#474B4F",
-      "bgcol-300": "#222629",
-      "accol-100": "#86C232",
-      "accol-200": "#61892F",
+      "cscol-100": "#DCDADF",
+      "cscol-200": "#3E8CC2",
+      "cscol-300": "#83B1D8",
+      "cscol-400": "#5C648D",
+      "cscol-500": "#254F7F",
     },
     extend: {
       backgroundImage: {
