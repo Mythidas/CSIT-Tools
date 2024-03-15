@@ -1,13 +1,25 @@
+'use client'
+
+import Dropdown from "../components/Dropdown";
+import VSAXClient from "../lib/VSAXClient";
+
 export default function Computers() {
+  async function on_click() {
+    let vsa: VSAXClient = new VSAXClient;
+    const sites = await vsa.get_sites();
+  }
+
   return (
     <main className="flex h-screen flex-col items-center bg-bgcol-100">
       { /* Nav Bar */ }
       <div className="flex justify-between w-full p-5 font-bold text-2xl text-accol-100 bg-bgcol-300">
         <div>
-          Office Drop Down
+          <Dropdown />
         </div>
         <div>
-          Home
+          <a href="/">
+            Home
+          </a>
         </div>
       </div>
       { /* Body */ }
