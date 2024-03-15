@@ -1,25 +1,36 @@
 'use client'
 
-import { useEffect, useState } from "react";
+import { useRef, useState } from "react";
 import VSAXClient from "../lib/VSAXClient";
 import Dropdown, { DropdownItem } from "../lib/components/Dropdown";
 import Overview from "./Overview";
 import Detailed from "./Detailed";
-
-import { test_site_list } from "./test_data";
+import { useEffectOnce } from "../lib/hooks/useEffectOnce";
+import { Site } from "../lib/interfaces/vsax/site";
 
 export default function Computers() {
   const [site_list, set_site_list] = useState<DropdownItem[]>([]);
   const [selected_tab, set_selected_tab] = useState<string>("Overview");
 
-  useEffect(() => {
-    // Load site information to populate dropdown list
-  }, [])
+  const vsax_client = useRef<VSAXClient>(new VSAXClient);
 
-  async function on_click() {
-    let vsa: VSAXClient = new VSAXClient;
-    const sites = await vsa.get_sites();
-  }
+  useEffectOnce(() => {
+    // Load site information to populate dropdown list
+    function convert_vsax_client_list_to_dropdown(sites: Site[]): DropdownItem[] {
+      let covnvert_list: DropdownItem[] = [];
+      for (let i = 0; i < sites.length; i++) {
+        covnvert_list.push({ label: sites[i].name, id: sites[i].vsa_id.toString() });
+      }
+      return covnvert_list;
+    }
+    
+    async function load_sites() {
+      const vsa_site_list = await vsax_client.current.get_sites();
+      set_site_list(convert_vsax_client_list_to_dropdown(vsa_site_list));
+    }
+
+    load_sites();
+  }, [])
 
   function on_site_changed(item: DropdownItem) {
     console.log(item.id);
@@ -34,7 +45,7 @@ export default function Computers() {
       { /* Nav Bar */ }
       <div className="flex justify-between w-full h-20 p-3 font-bold text-2xl text-accol-100 bg-cscol-200 text-cscol-100">
         <div>
-          <Dropdown items={test_site_list} on_item_changed={on_site_changed} />
+          <Dropdown items={site_list} on_item_changed={on_site_changed} />
         </div>
         <div className="flex items-center">
           <a className="hover:text-cscol-400" href="/">

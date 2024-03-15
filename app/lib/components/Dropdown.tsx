@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 import { useEffectOnce } from "../hooks/useEffectOnce";
 
 export interface DropdownItem {
@@ -28,11 +28,9 @@ const Dropdown: React.FC<DropdownProps> = ({ items, on_item_changed = null }) =>
       }
     };
 
-    console.log("mount");
     document.addEventListener('mousedown', close_dropdown);
 
     return () => {
-      console.log("unmount");
       document.removeEventListener('mousedown', close_dropdown);
     };
   }, [])
@@ -59,12 +57,12 @@ const Dropdown: React.FC<DropdownProps> = ({ items, on_item_changed = null }) =>
       {!show_list && 
       <button className="bg-cscol-400 text-cscol-100 hover:bg-cscol-500 shadow-md w-full h-full p-2 rounded-sm" onClick={toggle_list}>
         {current_item && current_item.label}
-        {!current_item && "Empty Dropdown"}
+        {!current_item && "Choose Option"}
       </button>}
       {show_list && 
       <input className="text-cscol-500 shadow-md p-2 outline-none focus:border-cscol-500 border-2" placeholder={current_item?.label} onChange={lookup_change} autoFocus />}
       <div className={`${!show_list && 'hidden'} absolute flex shadow-md`}>
-        <ol className="flex flex-col w-full max-h-48 overflow-y-auto bg-cscol-400 rounded-sm">
+        <ol className="flex flex-col w-full max-h-96 overflow-y-auto bg-cscol-400 rounded-sm">
           {items.map(item => {
             if (!item.label.toLowerCase().includes(lookup_value)) {
               return;
