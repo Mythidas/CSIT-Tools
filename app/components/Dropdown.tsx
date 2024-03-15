@@ -70,6 +70,7 @@ const Dropdown: React.FC<DropdownProps> = ({ items, on_item_changed = null }) =>
       {!show_list && 
       <button className="bg-cscol-400 text-cscol-100 hover:bg-cscol-500 shadow-md w-full h-full p-2 rounded-sm" onClick={toggle_list}>
         {current_item && current_item.label}
+        {!current_item && "Empty Dropdown"}
       </button>}
       {show_list && 
       <input className="text-cscol-500 shadow-md p-2 outline-none focus:border-cscol-500 border-2" placeholder={current_item?.label} onChange={lookup_change} autoFocus />}

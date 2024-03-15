@@ -1,12 +1,20 @@
 'use client'
 
-import { useState } from "react";
-import Dropdown, { DropdownItem } from "../components/Dropdown";
+import { useEffect, useState } from "react";
 import VSAXClient from "../lib/VSAXClient";
+import Dropdown, { DropdownItem } from "../components/Dropdown";
+import Overview from "./Overview";
+import Detailed from "./Detailed";
+
 import { test_site_list } from "./test_data";
 
 export default function Computers() {
+  const [site_list, set_site_list] = useState<DropdownItem[]>([]);
   const [selected_tab, set_selected_tab] = useState<string>("Overview");
+
+  useEffect(() => {
+    // Load site information to populate dropdown list
+  }, [])
 
   async function on_click() {
     let vsa: VSAXClient = new VSAXClient;
@@ -24,9 +32,9 @@ export default function Computers() {
   return (
     <main className="flex h-screen flex-col items-center bg-cscol-500">
       { /* Nav Bar */ }
-      <div className="flex justify-between w-full p-3 font-bold text-2xl text-accol-100 bg-cscol-200 text-cscol-100">
+      <div className="flex justify-between w-full h-20 p-3 font-bold text-2xl text-accol-100 bg-cscol-200 text-cscol-100">
         <div>
-          <Dropdown items={test_site_list} on_item_changed={on_site_changed} />
+          <Dropdown items={site_list} on_item_changed={on_site_changed} />
         </div>
         <div className="flex items-center">
           <a className="hover:text-cscol-400" href="/">
@@ -47,7 +55,8 @@ export default function Computers() {
         </ul>
         { /* Main Page */ }
         <div className="py-5 px-10 w-full h-full shadow-[inset_0_-2px_6px_rgba(0,0,0,0.4)]">
-          {selected_tab}
+          {selected_tab === "Overview" && <Overview />}
+          {selected_tab === "Detailed" && <Detailed />}
         </div>
       </div>
     </main>
