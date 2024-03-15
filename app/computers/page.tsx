@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import VSAXClient from "../lib/VSAXClient";
-import Dropdown, { DropdownItem } from "../components/Dropdown";
+import Dropdown, { DropdownItem } from "../lib/components/Dropdown";
 import Overview from "./Overview";
 import Detailed from "./Detailed";
 
@@ -34,7 +34,7 @@ export default function Computers() {
       { /* Nav Bar */ }
       <div className="flex justify-between w-full h-20 p-3 font-bold text-2xl text-accol-100 bg-cscol-200 text-cscol-100">
         <div>
-          <Dropdown items={site_list} on_item_changed={on_site_changed} />
+          <Dropdown items={test_site_list} on_item_changed={on_site_changed} />
         </div>
         <div className="flex items-center">
           <a className="hover:text-cscol-400" href="/">

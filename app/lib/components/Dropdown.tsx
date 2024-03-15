@@ -1,4 +1,5 @@
 import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { useEffectOnce } from "../hooks/useEffectOnce";
 
 export interface DropdownItem {
   label: string;
@@ -15,37 +16,25 @@ const Dropdown: React.FC<DropdownProps> = ({ items, on_item_changed = null }) =>
   const [show_list, set_show_list] = useState<boolean>(false);
   const [lookup_value, set_lookup_value] = useState<string>("");
   
-  const initialized = useRef<boolean>(false);
   const dropdown_ref = useRef<HTMLDivElement>(null);
   const dropdown_open = useRef<boolean>(false);
 
-  useEffect(() => {
-    if (process.env.NODE_ENV === "development") {
-      if (!initialized.current) {
-        initialized.current = true;
-        return () => {};
-      } 
-    }
-
-    if ((initialized.current && process.env.NODE_ENV === "development")) {
-      initialized.current = true;
-      const close_dropdown = (e: MouseEvent) => {
-        
-        if (e.target) {
-          if (dropdown_open.current && !dropdown_ref.current?.contains(e.target as Node)) {
-            set_show_list(false);
-          }
+  useEffectOnce(() => {
+    const close_dropdown = (e: MouseEvent) => {
+      if (e.target) {
+        if (dropdown_open.current && !dropdown_ref.current?.contains(e.target as Node)) {
+          set_show_list(false);
         }
-      };
+      }
+    };
 
-      console.log("mount");
-      document.addEventListener('mousedown', close_dropdown);
+    console.log("mount");
+    document.addEventListener('mousedown', close_dropdown);
 
-      return () => {
-        console.log("unmount");
-        document.removeEventListener('mousedown', close_dropdown);
-      };
-    }
+    return () => {
+      console.log("unmount");
+      document.removeEventListener('mousedown', close_dropdown);
+    };
   }, [])
 
   function toggle_list() {

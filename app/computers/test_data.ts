@@ -1,4 +1,4 @@
-import { DropdownItem } from "../components/Dropdown";
+import { DropdownItem } from "../lib/components/Dropdown";
 
 export const test_site_list: DropdownItem[] = [
   { label: "All About Teeth", id: "d298ndandkwsadl" },
