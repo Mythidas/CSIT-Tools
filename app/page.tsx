@@ -1,16 +1,4 @@
-"use client"
-
-import SophosClient from "./lib/SophosClient";
-import { useEffectOnce } from "./lib/hooks/useEffectOnce";
-
 export default function Home() {
-  useEffectOnce(() => {
-    let client: SophosClient = new SophosClient;
-    client.get_devices();
-  }, []);
-
-
-
   return (
     <main className="flex h-screen flex-col items-center bg-cscol-500">
       <div className="flex justify-center w-1/3 p-10 m-10 shadow-md font-bold text-4xl bg-cscol-100 text-cscol-500 rounded-lg">
