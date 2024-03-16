@@ -19,3 +19,7 @@ Needed Functions:
   - I could create a separate view for looking at an individual computer that has options/tools
   - Comparison tab will need a summary at the top to provide a quick glance count
     - Possible that this tab may need to be excel exportable for users
+
+Overview Page:
+- Summary
+  - Site Name, Total Unique Computers, Matching Computers

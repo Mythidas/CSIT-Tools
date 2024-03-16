@@ -4,13 +4,15 @@ export default class VSAXClient {
   private cached_site_list: Site[] = [];
 
   async get_sites(): Promise<Site[]> {
-    const site_api = await fetch('/api/vsax/sites', {
-      method: "GET",
-    });
+    if (this.cached_site_list.length <= 0) {
+      const site_api = await fetch('/api/vsax/sites', {
+        method: "GET",
+      });
 
-    const site_data: Site[] = await site_api.json() as Site[];
-
-    return site_data;
+      this.cached_site_list = await site_api.json() as Site[];
+    }
+    
+    return this.cached_site_list;
   }
 
   async get_devices() {

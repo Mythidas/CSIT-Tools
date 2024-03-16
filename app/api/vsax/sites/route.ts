@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { Site, _VSASiteData } from "@/app/lib/interfaces/vsax/site";
 
 const vsa_url = "https://centriserve-it.vsax.net";
-const vsa_auth = btoa(`${process.env.VSA_UN}:${process.env.VSA_ID}`);
+const vsa_auth = btoa(`${process.env.VSA_ID}:${process.env.VSA_SC}`);
 
 export async function GET(req: Request) {
   try {
