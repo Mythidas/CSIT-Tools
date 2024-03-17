@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { Site, _VSASiteData } from "@/app/lib/interfaces/vsax/site";
+import { Site, _VSASiteData } from "@/app/lib/interfaces/agent/site";
 
 const vsa_url = "https://centriserve-it.vsax.net";
 const vsa_auth = btoa(`${process.env.VSA_ID}:${process.env.VSA_SC}`);

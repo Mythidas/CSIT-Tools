@@ -2,6 +2,7 @@ export interface Site {
   name: string;
   vsa_id: number;
   sophos_id?: string;
+  sophos_server?: string;
 }
 
 export interface _VSASiteInfo {

@@ -1,18 +1,18 @@
 'use client'
 
 import { useRef, useState } from "react";
-import VSAXClient from "../lib/VSAXClient";
+import AgentClient from "../lib/AgentClient";
 import Dropdown, { DropdownItem } from "../lib/components/Dropdown";
 import Overview from "./Overview";
 import Detailed from "./Detailed";
 import { useEffectOnce } from "../lib/hooks/useEffectOnce";
-import { Site } from "../lib/interfaces/vsax/site";
+import { Site } from "../lib/interfaces/agent/site";
 
 export default function Computers() {
   const [site_list, set_site_list] = useState<DropdownItem[]>([]);
   const [selected_tab, set_selected_tab] = useState<string>("Overview");
 
-  const vsax_client = useRef<VSAXClient>(new VSAXClient);
+  const agent_client = useRef<AgentClient>(new AgentClient);
 
   useEffectOnce(() => {
     // Load site information to populate dropdown list
@@ -25,7 +25,7 @@ export default function Computers() {
     }
     
     async function load_sites() {
-      const vsa_site_list = await vsax_client.current.get_sites();
+      const vsa_site_list = await agent_client.current.get_sites();
       set_site_list(convert_vsax_client_list_to_dropdown(vsa_site_list));
     }
 
