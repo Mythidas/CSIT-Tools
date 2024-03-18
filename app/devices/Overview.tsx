@@ -1,16 +1,58 @@
 "use client"
 
-import { useState } from "react"
+import React, { useState } from "react"
 import AgentClient from "../lib/AgentClient"
 import { useEffectOnce } from "../lib/hooks/useEffectOnce"
 import { Site } from "../lib/interfaces/agent/site"
 import { DeviceList } from "../lib/interfaces/agent/device"
-import React from "react"
+import { ExcelFile, ExcelSheet } from "react-xlsx-wrapper"
 
 interface OverviewProps {
   agent: AgentClient
   site?: Site
 }
+
+const multiDataSet = [
+  {
+    columns: [
+      {title: "Headings", width: {wpx: 80}},//pixels width 
+      {title: "Text Style", width: {wch: 40}},//char width 
+      {title: "Colors", width: {wpx: 90}},
+    ],
+    data: [
+      [
+          {value: "H1", style: {font: {sz: "24", bold: true}}},
+          {value: "Bold", style: {font: {bold: true}}},
+          {value: "Red", style: {fill: {patternType: "solid", fgColor: {rgb: "FFFF0000"}}}},
+      ],
+      [
+          {value: "H2", style: {font: {sz: "18", bold: true}}},
+          {value: "underline", style: {font: {underline: true}}},
+          {value: "Blue", style: {fill: {patternType: "solid", fgColor: {rgb: "FF0000FF"}}}},
+      ],
+      [
+          {value: "H3", style: {font: {sz: "14", bold: true}}},
+          {value: "italic", style: {font: {italic: true}}},
+          {value: "Green", style: {fill: {patternType: "solid", fgColor: {rgb: "FF00FF00"}}}},
+      ],
+      [
+          {value: "H4", style: {font: {sz: "12", bold: true}}},
+          {value: "strike", style: {font: {strike: true}}},
+          {value: "Orange", style: {fill: {patternType: "solid", fgColor: {rgb: "FFF86B00"}}}},
+      ],
+      [
+          {value: "H5", style: {font: {sz: "10.5", bold: true}}},
+          {value: "outline", style: {font: {outline: true}}},
+          {value: "Yellow", style: {fill: {patternType: "solid", fgColor: {rgb: "FFFFFF00"}}}},
+      ],
+      [
+          {value: "H6", style: {font: {sz: "7.5", bold: true}}},
+          {value: "shadow", style: {font: {shadow: true}}},
+          {value: "Light Blue", style: {fill: {patternType: "solid", fgColor: {rgb: "FFCCEEFF"}}}}
+      ]
+    ]
+  }
+];
 
 const Overview: React.FC<OverviewProps> = ({ agent, site }) => {
   const [device_list, set_device_list] = useState<DeviceList | undefined>(undefined);
@@ -22,10 +64,17 @@ const Overview: React.FC<OverviewProps> = ({ agent, site }) => {
     }
 
     if (site) {
-      set_device_list({ site_name: site.name, devices: [], rogue_devices: 0 });
+      set_device_list(undefined);
       get_devices(site);
     }
   }, [site])
+
+  function export_table(): XLSXDataSet[] {
+    let data_set: XLSXDataSet = { columns: [], data: [] };
+    
+
+    return [data_set];
+  }
 
   if (!site) {
     return <div></div>
@@ -33,7 +82,13 @@ const Overview: React.FC<OverviewProps> = ({ agent, site }) => {
 
   return (
     <div className="flex flex-col h-5/6">
-      <p className="font-bold text-3xl pb-4">Summary</p>
+      <div className="flex pb-4 gap-3 font-bold"> 
+        <p className="text-3xl">Summary</p>
+        {device_list && 
+        <ExcelFile element={<button className="bg-cscol-200 px-3 py-1 rounded-md text-xl">Export Table</button>}>
+          <ExcelSheet dataSet={export_table()} name="Overview Report" />
+        </ExcelFile>}
+      </div>
       <div className="grid grid-flow-col auto-cols-max gap-1 text-cscol-500 font-bold text-xl">
         <div className="bg-cscol-100 p-2">{site.name}</div>
         <div className="bg-cscol-100 p-2">Unique Computers: {device_list?.devices.length}</div>

@@ -4,7 +4,6 @@ import { useRef, useState } from "react";
 import AgentClient from "../lib/AgentClient";
 import Dropdown, { DropdownItem } from "../lib/components/Dropdown";
 import Overview from "./Overview";
-import Detailed from "./Detailed";
 import { useEffectOnce } from "../lib/hooks/useEffectOnce";
 import { Site } from "../lib/interfaces/agent/site";
 
@@ -61,14 +60,10 @@ export default function Computers() {
           <li className={`p-5 w-full text-center shadow-md cursor-pointer hover:bg-cscol-300 ${selected_tab === "Overview" && "bg-cscol-400 text-cscol-100 hover:bg-cscol-400"}`} onClick={() => on_tab_selected("Overview")}>
             Overview
           </li>
-          <li className={`p-5 w-full text-center shadow-md cursor-pointer hover:bg-cscol-300 ${selected_tab === "Detailed" && "bg-cscol-400 text-cscol-100 hover:bg-cscol-400"}`} onClick={() => on_tab_selected("Detailed")}>
-            Detailed
-          </li>
         </ul>
         { /* Main Page */ }
         <div className="py-5 px-10 w-full h-full shadow-[inset_0_-2px_6px_rgba(0,0,0,0.4)]">
           {selected_tab === "Overview" && <Overview agent={agent_client.current} site={selected_site} />}
-          {selected_tab === "Detailed" && <Detailed />}
         </div>
       </div>
     </main>
