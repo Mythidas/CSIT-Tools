@@ -1,4 +1,3 @@
-import { NextResponse } from "next/server";
 import { Site, _VSASiteData } from "@/app/lib/interfaces/agent/site";
 
 const vsa_url = "https://centriserve-it.vsax.net";
@@ -19,7 +18,12 @@ export async function GET(req: Request) {
       const data = await res.json() as _VSASiteData;
       
       for (let i = 0; i < data.Data.length; i++) {
-        site_list.push({ name: data.Data[i].ParentName + " - " + data.Data[i].Name, vsa_id: data.Data[i].Id });
+        let site_name = data.Data[i].Name;
+        if (site_name.toLowerCase().localeCompare(data.Data[i].ParentName.toLowerCase())) {
+          site_name = data.Data[i].ParentName + " - " + site_name;
+        }
+
+        site_list.push({ name: site_name, vsa_id: data.Data[i].Id });
       }
       
       if (site_list.length >= data.Meta.TotalCount) {
@@ -27,9 +31,9 @@ export async function GET(req: Request) {
       }
     }
 
-    return NextResponse.json(site_list.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()) ), { status: 200 });
+    return Response.json(site_list.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()) ), { status: 200 });
   }
   catch {
-    return NextResponse.json("Failed to get users", { status: 500 });
+    return Response.json("Failed to get users", { status: 500 });
   }
 }

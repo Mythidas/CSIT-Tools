@@ -11,6 +11,7 @@ import { Site } from "../lib/interfaces/agent/site";
 export default function Computers() {
   const [site_list, set_site_list] = useState<DropdownItem[]>([]);
   const [selected_tab, set_selected_tab] = useState<string>("Overview");
+  const [selected_site, set_selected_site] = useState<Site | undefined>(undefined);
 
   const agent_client = useRef<AgentClient>(new AgentClient);
 
@@ -26,14 +27,14 @@ export default function Computers() {
     
     async function load_sites() {
       const vsa_site_list = await agent_client.current.get_sites();
-      set_site_list(convert_vsax_client_list_to_dropdown(vsa_site_list));
+      if (vsa_site_list) set_site_list(convert_vsax_client_list_to_dropdown(vsa_site_list));
     }
 
     load_sites();
   }, [])
 
-  function on_site_changed(item: DropdownItem) {
-    console.log(item.id);
+  async function on_site_changed(item: DropdownItem) {
+    set_selected_site((await agent_client.current.get_sites()).find(site => site.name === item.label));
   }
 
   function on_tab_selected(tab: string) {
@@ -41,7 +42,7 @@ export default function Computers() {
   }
 
   return (
-    <main className="flex h-screen flex-col items-center bg-cscol-500">
+    <main className="flex h-screen overflow-hidden flex-col items-center bg-cscol-500">
       { /* Nav Bar */ }
       <div className="flex justify-between w-full h-20 p-3 font-bold text-2xl text-accol-100 bg-cscol-200 text-cscol-100">
         <div>
@@ -66,7 +67,7 @@ export default function Computers() {
         </ul>
         { /* Main Page */ }
         <div className="py-5 px-10 w-full h-full shadow-[inset_0_-2px_6px_rgba(0,0,0,0.4)]">
-          {selected_tab === "Overview" && <Overview />}
+          {selected_tab === "Overview" && <Overview agent={agent_client.current} site={selected_site} />}
           {selected_tab === "Detailed" && <Detailed />}
         </div>
       </div>
