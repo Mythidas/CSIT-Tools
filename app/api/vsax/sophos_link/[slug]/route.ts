@@ -18,11 +18,11 @@ export async function GET(req: Request, { params }: { params: { slug: string }})
     let site_link: Site = { name: "LINK", vsa_id: Number(site_id) };
 
     for (let i = 0; i < fields_data.Data.length; i++) {
-      if (fields_data.Data[i].Name === "SophosApiHost") {
+      if (fields_data.Data[i].Name === "API-SophosApiHost") {
         site_link.sophos_url = fields_data.Data[i].Value;
       }
 
-      if (fields_data.Data[i].Name === "SophosTenantID") {
+      if (fields_data.Data[i].Name === "API-SophosTenantID") {
         site_link.sophos_id = fields_data.Data[i].Value;
       }
     }
