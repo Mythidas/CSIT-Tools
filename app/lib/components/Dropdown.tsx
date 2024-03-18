@@ -61,7 +61,7 @@ const Dropdown: React.FC<DropdownProps> = ({ items, on_item_changed = null }) =>
       </button>}
       {show_list && 
       <input className="text-cscol-500 shadow-md p-2 outline-none focus:border-cscol-500 border-2" placeholder={current_item?.label} onChange={lookup_change} autoFocus />}
-      <div className={`${!show_list && 'hidden'} absolute flex shadow-md`}>
+      <div className={`${!show_list && 'hidden'} absolute flex shadow-md z-10`}>
         <ol className="flex flex-col w-full max-h-96 overflow-y-auto bg-cscol-400 rounded-sm">
           {items.map(item => {
             if (!item.label.toLowerCase().includes(lookup_value)) {
@@ -71,7 +71,7 @@ const Dropdown: React.FC<DropdownProps> = ({ items, on_item_changed = null }) =>
             return (
               <li
                 key={item.id}
-                className={`p-2 cursor-pointer ${item.label == current_item?.label && 'bg-cscol-200'} hover:bg-cscol-300`} 
+                className={`p-2 cursor-pointer outline-1 outline outline-cscol-300 ${item.label == current_item?.label && 'bg-cscol-200'} hover:bg-cscol-300`} 
                 onClick={() => select_item(item)}
               >
                 {item.label}
