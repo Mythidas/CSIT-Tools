@@ -37,7 +37,7 @@ const Overview: React.FC<OverviewProps> = ({ agent, site }) => {
       <div className="grid grid-flow-col auto-cols-max gap-1 text-cscol-500 font-bold text-xl">
         <div className="bg-cscol-100 p-2">{site.name}</div>
         <div className="bg-cscol-100 p-2">Unique Computers: {device_list?.devices.length}</div>
-        <div className="bg-cscol-100 p-2">Matching Computers: {device_list && (device_list?.devices.length - device_list?.rogue_devices)}</div>
+        <div className={`${device_list && device_list.rogue_devices === 0 ? "bg-cscol-100" : "bg-errcol-100 text-cscol-100"} p-2`}>Matching Computers: {device_list && (device_list?.devices.length - device_list?.rogue_devices)}</div>
       </div>
       <p className="font-bold text-3xl py-4">Computers</p>
       <div className="flex w-full h-5/6 overflow-y-auto">
@@ -53,11 +53,11 @@ const Overview: React.FC<OverviewProps> = ({ agent, site }) => {
           <tbody className="text-cscol-500 text-center">
             {device_list &&
               device_list.devices.map((device, index) => (
-                <tr key={index} className="even:bg-cscol-300 odd:bg-cscol-100">
-                  <td className="p-1 text-xl font-bold" key={(device.name + "0")}>{device.name}</td>
-                  <td className="p-1 text-xl font-bold" key={(device.name + "1")}>{device.vsa_id ? "YES" : "NO"}</td>
-                  <td className="p-1 text-xl font-bold" key={(device.name + "2")}>{device.sophos_id ? "YES" : "NO"}</td>
-                  <td className="p-1 text-xl font-bold" key={(device.name + "3")}>{device.os}</td>
+                <tr key={index} className="even:bg-cscol-300 odd:bg-cscol-100 text-xl font-bold">
+                  <td key={(device.name + "0")}>{device.name}</td>
+                  <td className={`${device.vsa_id ? "" : "text-errcol-100"}`} key={(device.name + "1")}>{device.vsa_id ? "YES" : "NO"}</td>
+                  <td className={`${device.sophos_id ? "" : "text-errcol-100"}`} key={(device.name + "2")}>{device.sophos_id ? "YES" : "NO"}</td>
+                  <td key={(device.name + "3")}>{device.os}</td>
                 </tr>
               ))
             }

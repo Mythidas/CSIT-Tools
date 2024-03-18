@@ -5,8 +5,7 @@ import { NextRequest } from "next/server";
 export async function GET(req: NextRequest) {
   try {
     const jwt_token = cookies().get("jwt_token");
-    const partner_token = cookies().get("partner_token");
-    if (jwt_token && partner_token) {
+    if (jwt_token) {
       const sophos_id = req.headers.get("x-tenant-id");
       const sophos_url = req.headers.get("x-tenant-url");
 

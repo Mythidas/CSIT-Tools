@@ -6,15 +6,6 @@ export async function GET(req: NextRequest) {
     const jwt_token = cookies().get("jwt_token");
     const partner_token = cookies().get("partner_token");
     if (jwt_token && partner_token) {
-
-      // const tenants_res = await fetch("https://api.central.sophos.com/partner/v1/tenants", {
-      //   method: "GET",
-      //   headers: {
-      //     "Authorization": `Bearer ${jwt_token.value}`,
-      //     "X-Partner-ID": partner_data.id
-      //   }
-      // });
-
       return Response.json("Cookie validated", { status: 200 });
     }
 

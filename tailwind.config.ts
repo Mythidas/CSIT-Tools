@@ -13,6 +13,8 @@ const config: Config = {
       "cscol-300": "#83B1D8",
       "cscol-400": "#5C648D",
       "cscol-500": "#254F7F",
+      "errcol-100": "#FF204E",
+      "appcol-100": "#FF204E",
     },
     extend: {
       backgroundImage: {
