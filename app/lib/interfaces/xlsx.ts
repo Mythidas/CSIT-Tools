@@ -6,18 +6,43 @@ interface XLSXFontStyle {
   strike?: boolean;
   outline?: boolean;
   shadow?: boolean;
+  name?: string; // Font name 
+  color?: { rgb: string }; // Font color
 }
 
 interface XLSXFillStyle {
-  patternType?: string; // "solid" etc.
-  fgColor?: { 
-      rgb: string;  // Hexadecimal color code
-  }
+  patternType?: "solid" | "none";  
+  fgColor?: { rgb: string };  
+  bgColor?: { rgb: string }; 
+}
+
+interface XLSXBorderSide {
+  style?: "thin" | "medium" | "thick" | "dotted" | "dashed";
+  color?: { rgb: string };
+}
+
+interface XLSXBorderStyle {
+  top?: XLSXBorderSide;
+  bottom?: XLSXBorderSide;
+  left?: XLSXBorderSide;
+  right?: XLSXBorderSide;
+  diagonal?: XLSXBorderSide;
+  diagonalUp?: boolean;
+  diagonalDown?: boolean;
 }
 
 interface XLSXStyle {
   font?: XLSXFontStyle;
   fill?: XLSXFillStyle;
+  numFmt?: string | number;
+  alignment?: {
+    vertical?: "bottom" | "center" | "top";
+    horizontal?: "bottom" | "center" | "top";
+    wrapText?: boolean;
+    readingOrder?: number; 
+    textRotation?: number; 
+  };
+  border?: XLSXBorderStyle;
 }
 
 interface XLSXCell {

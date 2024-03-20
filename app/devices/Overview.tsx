@@ -83,16 +83,38 @@ const Overview: React.FC<OverviewProps> = ({ agent, site }) => {
     if (device_list) {
       for (let i = 0; i < device_list?.devices.length; i++) {
         data_set.data.push([
-          { value: device_list.devices[i].name, style: { font: { sz: "10" } }},
+          { 
+            value: device_list.devices[i].name, 
+            style: { 
+              font: { sz: "10" } 
+            }
+          },
           { 
             value: device_list.devices[i].vsa_id ? "YES" : "NO", 
-            style: { font: { sz: "10" }, fill: { patternType: "solid", fgColor: { rgb: device_list.devices[i].vsa_id ? "FFFFFFFF" : "FFFF0000" } } }
+            style: { font: { sz: "10" }, 
+              fill: { 
+                patternType: device_list.devices[i].vsa_id ? "none" : "solid", 
+                fgColor: { 
+                  rgb: "FFFF204E"
+                }
+              },
+            }
           },
           { 
             value: device_list.devices[i].sophos_id ? "YES" : "NO", 
-            style: { font: { sz: "10" }, fill: { patternType: "solid", fgColor: { rgb: device_list.devices[i].sophos_id ? "FFFFFFFF" : "FFFF0000" } } }
+            style: { font: { sz: "10" }, 
+              fill: { 
+                patternType: device_list.devices[i].sophos_id ? "none" : "solid", 
+                fgColor: { 
+                  rgb: "FFFF204E"
+                }
+              },
+            }
           },
-          { value: device_list.devices[i].os, style: { font: { sz: "10" } }},
+          { 
+            value: device_list.devices[i].os, 
+            style: { font: { sz: "10" } }
+          },
         ])
       }
     }
@@ -109,7 +131,7 @@ const Overview: React.FC<OverviewProps> = ({ agent, site }) => {
       <div className="flex pb-4 gap-3 font-bold"> 
         <p className="text-3xl">Summary</p>
         {device_list && 
-        <ExcelFile element={<button className="bg-cscol-200 px-3 py-1 rounded-md text-xl">Export Table</button>}>
+        <ExcelFile filename={`Overview - ${site.name}`} element={<button className="bg-cscol-200 px-3 py-1 rounded-md text-xl">Export Table</button>}>
           {export_table()}
         </ExcelFile>}
       </div>
