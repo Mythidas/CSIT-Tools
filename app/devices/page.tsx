@@ -19,7 +19,7 @@ export default function Computers() {
     function convert_vsax_client_list_to_dropdown(sites: Site[]): DropdownItem[] {
       let covnvert_list: DropdownItem[] = [];
       for (let i = 0; i < sites.length; i++) {
-        covnvert_list.push({ label: sites[i].name, id: sites[i].vsa_id.toString() });
+        covnvert_list.push({ label: sites[i].name, id: sites[i].vsa_id?.toString() || "" });
       }
       return covnvert_list;
     }
