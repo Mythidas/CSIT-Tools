@@ -12,48 +12,6 @@ interface OverviewProps {
   site?: Site
 }
 
-const multiDataSet = [
-  {
-    columns: [
-      {title: "Headings", width: {wpx: 80}},//pixels width 
-      {title: "Text Style", width: {wch: 40}},//char width 
-      {title: "Colors", width: {wpx: 90}},
-    ],
-    data: [
-      [
-          {value: "Test", style: {font: {sz: "24", bold: true}}},
-          {value: "Bold", style: {font: {bold: true}}},
-          {value: "Red", style: {fill: {patternType: "solid", fgColor: {rgb: "FFFF0000"}}}},
-      ],
-      [
-          {value: "H2", style: {font: {sz: "18", bold: true}}},
-          {value: "underline", style: {font: {underline: true}}},
-          {value: "Blue", style: {fill: {patternType: "solid", fgColor: {rgb: "FF0000FF"}}}},
-      ],
-      [
-          {value: "H3", style: {font: {sz: "14", bold: true}}},
-          {value: "italic", style: {font: {italic: true}}},
-          {value: "Green", style: {fill: {patternType: "solid", fgColor: {rgb: "FF00FF00"}}}},
-      ],
-      [
-          {value: "H4", style: {font: {sz: "12", bold: true}}},
-          {value: "strike", style: {font: {strike: true}}},
-          {value: "Orange", style: {fill: {patternType: "solid", fgColor: {rgb: "FFF86B00"}}}},
-      ],
-      [
-          {value: "H5", style: {font: {sz: "10.5", bold: true}}},
-          {value: "outline", style: {font: {outline: true}}},
-          {value: "Yellow", style: {fill: {patternType: "solid", fgColor: {rgb: "FFFFFF00"}}}},
-      ],
-      [
-          {value: "H6", style: {font: {sz: "7.5", bold: true}}},
-          {value: "shadow", style: {font: {shadow: true}}},
-          {value: "Light Blue", style: {fill: {patternType: "solid", fgColor: {rgb: "FFCCEEFF"}}}}
-      ]
-    ]
-  }
-];
-
 const Overview: React.FC<OverviewProps> = ({ agent, site }) => {
   const [device_list, set_device_list] = useState<DeviceList | undefined>(undefined);
 
@@ -70,12 +28,36 @@ const Overview: React.FC<OverviewProps> = ({ agent, site }) => {
   }, [site])
 
   function export_table() {
+    const column_header_style: XLSXStyle = { 
+      alignment: { horizontal: "center" }, 
+      font: { bold: true, sz: "16" }, 
+      fill: { patternType: "solid", fgColor: { rgb: "FF83B1D8" } },
+      border: { 
+        top: { style: "thin", color: { rgb: "FF000000" } },
+        right: { style: "thin", color: { rgb: "FF000000" } },
+        bottom: { style: "thin", color: { rgb: "FF000000" } },
+        left: { style: "thin", color: { rgb: "FF000000" } } 
+      }
+    };
+
     let data_set: XLSXDataSet = {
       columns: [
-        { title: "Device", width: { wch: 25 } },
-        { title: "VSAX", width: { wch: 10 } },
-        { title: "Sophos", width: { wch: 10 } },
-        { title: "OS", width: { wch: 15 } },
+        { 
+          title: "Device", width: { wch: 25 }, 
+          style: column_header_style
+        },
+        { 
+          title: "VSAX", width: { wch: 10 }, 
+          style: column_header_style
+        },
+        { 
+          title: "Sophos", width: { wch: 10 }, 
+          style: column_header_style
+        },
+        { 
+          title: "OS", width: { wch: 15 }, 
+          style: column_header_style
+        },
       ],
       data: []
     };
@@ -86,12 +68,13 @@ const Overview: React.FC<OverviewProps> = ({ agent, site }) => {
           { 
             value: device_list.devices[i].name, 
             style: { 
-              font: { sz: "10" } 
+              font: { sz: "12" } 
             }
           },
           { 
             value: device_list.devices[i].vsa_id ? "YES" : "NO", 
-            style: { font: { sz: "10" }, 
+            style: { 
+              font: { sz: "12" }, 
               fill: { 
                 patternType: device_list.devices[i].vsa_id ? "none" : "solid", 
                 fgColor: { 
@@ -102,7 +85,8 @@ const Overview: React.FC<OverviewProps> = ({ agent, site }) => {
           },
           { 
             value: device_list.devices[i].sophos_id ? "YES" : "NO", 
-            style: { font: { sz: "10" }, 
+            style: { 
+              font: { sz: "12" }, 
               fill: { 
                 patternType: device_list.devices[i].sophos_id ? "none" : "solid", 
                 fgColor: { 
@@ -113,7 +97,7 @@ const Overview: React.FC<OverviewProps> = ({ agent, site }) => {
           },
           { 
             value: device_list.devices[i].os, 
-            style: { font: { sz: "10" } }
+            style: { font: { sz: "12" } }
           },
         ])
       }
@@ -142,7 +126,7 @@ const Overview: React.FC<OverviewProps> = ({ agent, site }) => {
       </div>
       <p className="font-bold text-3xl py-4">Devices</p>
       <div className="flex w-full h-5/6 overflow-y-auto">
-        <table className="table-auto border-separate w-full h-full text-cscol-500 text-center">
+        <table className="table-auto border-separate w-full h-fit text-cscol-500 text-center">
           <thead className="sticky top-0">
             <tr>
               <th key={0} className="bg-cscol-200 text-cscol-100 p-1 text-xl font-bold">Name</th>

@@ -54,10 +54,11 @@ type XLSXRow = XLSXCell[];
 
 interface XLSXColumn {
   title: string;
-  width: {
+  width?: {
       wpx?: number; // Width in pixels
       wch?: number; // Width in characters
   }
+  style?: XLSXStyle;
 } 
 
 interface XLSXDataSet {
