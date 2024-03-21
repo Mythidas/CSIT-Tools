@@ -1,6 +1,6 @@
 export interface Site {
   name: string;
-  vsa_id: number;
+  vsa_id?: number;
   sophos_id?: string;
   sophos_url?: string;
 }

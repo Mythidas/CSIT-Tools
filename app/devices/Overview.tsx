@@ -5,7 +5,8 @@ import AgentClient from "../lib/AgentClient"
 import { useEffectOnce } from "../lib/hooks/useEffectOnce"
 import { Site } from "../lib/interfaces/agent/site"
 import { DeviceList } from "../lib/interfaces/agent/device"
-import { ExcelFile, ExcelSheet } from "react-xlsx-wrapper"
+import { ExcelFile, ExcelSheet, ExcelSheetData, ExcelStyle } from "react-xlsx-wrapper"
+import Loading from "../lib/components/Loading"
 
 interface OverviewProps {
   agent: AgentClient
@@ -28,19 +29,14 @@ const Overview: React.FC<OverviewProps> = ({ agent, site }) => {
   }, [site])
 
   function export_table() {
-    const column_header_style: XLSXStyle = { 
+    const column_header_style: ExcelStyle = { 
       alignment: { horizontal: "center" }, 
-      font: { bold: true, sz: "16" }, 
+      font: { bold: true, sz: 16 }, 
       fill: { patternType: "solid", fgColor: { rgb: "FF83B1D8" } },
-      border: { 
-        top: { style: "thin", color: { rgb: "FF000000" } },
-        right: { style: "thin", color: { rgb: "FF000000" } },
-        bottom: { style: "thin", color: { rgb: "FF000000" } },
-        left: { style: "thin", color: { rgb: "FF000000" } } 
-      }
+      border: { style: "thin", color: { auto: 1, rgb: "FF000000" } }
     };
 
-    let data_set: XLSXDataSet = {
+    let data_set: ExcelSheetData = {
       columns: [
         { 
           title: "Device", width: { wch: 25 }, 
@@ -68,13 +64,13 @@ const Overview: React.FC<OverviewProps> = ({ agent, site }) => {
           { 
             value: device_list.devices[i].name, 
             style: { 
-              font: { sz: "12" } 
+              font: { sz: 12 } 
             }
           },
           { 
             value: device_list.devices[i].vsa_id ? "YES" : "NO", 
             style: { 
-              font: { sz: "12" }, 
+              font: { sz: 12 }, 
               fill: { 
                 patternType: device_list.devices[i].vsa_id ? "none" : "solid", 
                 fgColor: { 
@@ -86,7 +82,7 @@ const Overview: React.FC<OverviewProps> = ({ agent, site }) => {
           { 
             value: device_list.devices[i].sophos_id ? "YES" : "NO", 
             style: { 
-              font: { sz: "12" }, 
+              font: { sz: 12 }, 
               fill: { 
                 patternType: device_list.devices[i].sophos_id ? "none" : "solid", 
                 fgColor: { 
@@ -97,7 +93,7 @@ const Overview: React.FC<OverviewProps> = ({ agent, site }) => {
           },
           { 
             value: device_list.devices[i].os, 
-            style: { font: { sz: "12" } }
+            style: { font: { sz: 12 } }
           },
         ])
       }
@@ -125,7 +121,7 @@ const Overview: React.FC<OverviewProps> = ({ agent, site }) => {
         <div className={`${device_list && device_list.rogue_devices === 0 ? "bg-cscol-100" : "bg-errcol-100 text-cscol-100"} p-2`}>Matching Computers: {device_list && (device_list?.devices.length - device_list?.rogue_devices)}</div>
       </div>
       <p className="font-bold text-3xl py-4">Devices</p>
-      <div className="flex w-full h-5/6 overflow-y-auto">
+      {device_list && <div className="flex w-full h-5/6 overflow-y-auto">
         <table className="table-auto border-separate w-full h-fit text-cscol-500 text-center">
           <thead className="sticky top-0">
             <tr>
@@ -148,7 +144,8 @@ const Overview: React.FC<OverviewProps> = ({ agent, site }) => {
             }
           </tbody>
         </table>
-      </div>
+      </div>}
+      {!device_list && <Loading />}
     </div>
   )
 }

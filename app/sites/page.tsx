@@ -45,7 +45,7 @@ export default function Sites() {
         { /* Main Page */ }
         <div className="py-5 px-10 w-full h-full shadow-[inset_0_-2px_6px_rgba(0,0,0,0.4)]">
           {selected_tab === "Reports" && <Reports agent={agent_client.current} />}
-          {selected_tab === "Backend" && <Backend />}
+          {selected_tab === "Backend" && <Backend agent={agent_client.current} />}
         </div>
       </div>
     </main>

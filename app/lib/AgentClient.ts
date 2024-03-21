@@ -7,6 +7,7 @@ export default class AgentClient {
   private token_generated: boolean = false;
   private cache_expiration: number = Date.now() + 3600 * 1000;
 
+  // Return sites from VSA. VSA has cached info for Sophos Sites available through Sophos_Link API calls
   async get_sites(): Promise<Site[]> {
     this.validate_cache();
     if (this.cached_site_list.length <= 0) {
@@ -20,11 +21,19 @@ export default class AgentClient {
     return this.cached_site_list;
   }
 
+  // Returns sites only from Sophos. This won't get cached in the AgentClient
+  async get_sophos_sites(): Promise<Site[]> {
+    if (!await this.validate_token()) return [];
+
+    
+    return [];
+  }
+
   async get_devices(site: Site): Promise<DeviceList> {
     await this.validate_cache();
     if (!await this.validate_token()) return { site_name: site.name, devices: [], rogue_devices: 0 };
 
-    // Update Sophos Link info and update cached site
+    // Update Sophos_Link info and update cached site
     if (!site.sophos_id || !site.sophos_url) {
       const link_res = await fetch(`/api/vsax/sophos_link/${site.vsa_id}`);
       const link_data = (await link_res.json()) as Site;
