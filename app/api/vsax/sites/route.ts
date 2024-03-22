@@ -18,8 +18,6 @@ export async function GET(req: Request) {
       const data = await res.json() as _VSASiteData;
       
       for (let i = 0; i < data.Data.length; i++) {
-        if (!data.Data[i]) continue;
-
         let site_name = data.Data[i].Name;
         if (site_name.toLowerCase().localeCompare(data.Data[i].ParentName.toLowerCase())) {
           site_name = data.Data[i].ParentName + " - " + site_name;

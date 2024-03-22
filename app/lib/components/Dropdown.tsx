@@ -64,7 +64,7 @@ const Dropdown: React.FC<DropdownProps> = ({ items, on_item_changed = null }) =>
       <div className={`${!show_list && 'hidden'} absolute flex shadow-md z-10`}>
         <ol className="flex flex-col w-full max-h-96 overflow-y-auto bg-cscol-400 rounded-sm">
           {items.map(item => {
-            if (!item || !item.label.toLowerCase().includes(lookup_value)) {
+            if (!item.label || !item.label.toLowerCase().includes(lookup_value)) {
               return;
             }
 
