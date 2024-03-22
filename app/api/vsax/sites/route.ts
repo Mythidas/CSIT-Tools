@@ -18,6 +18,8 @@ export async function GET(req: Request) {
       const data = await res.json() as _VSASiteData;
       
       for (let i = 0; i < data.Data.length; i++) {
+        if (!data.Data[i]) continue;
+
         let site_name = data.Data[i].Name;
         if (site_name.toLowerCase().localeCompare(data.Data[i].ParentName.toLowerCase())) {
           site_name = data.Data[i].ParentName + " - " + site_name;
@@ -34,6 +36,6 @@ export async function GET(req: Request) {
     return Response.json(site_list.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()) ), { status: 200 });
   }
   catch {
-    return Response.json("Failed to get users", { status: 500 });
+    return Response.json("Failed to get sites", { status: 500 });
   }
 }
