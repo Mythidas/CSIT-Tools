@@ -1,4 +1,5 @@
 import { Site, _VSASiteFields } from "@/app/lib/interfaces/agent/site";
+import APIView from "@/app/lib/tools/APIView";
 
 const vsa_url = "https://centriserve-it.vsax.net";
 const vsa_auth = btoa(`${process.env.VSA_ID}:${process.env.VSA_SC}`);
@@ -6,15 +7,25 @@ const vsa_auth = btoa(`${process.env.VSA_ID}:${process.env.VSA_SC}`);
 export async function GET(req: Request, { params }: { params: { slug: string }}) {
   try {
     const site_id = params.slug;
-    const fields_res = await fetch(`${vsa_url}/api/v3/sites/${site_id}/customfields`, {
+    const fields_api = new APIView(`${vsa_url}/api/v3/sites/${site_id}/customfields`);
+    const fields_data = await fields_api.request_external({
       method: "GET",
       headers: {
         "authorization": `Basic ${vsa_auth}`,
         "content-type": "application/json"
       }
-    });
+    }) as _VSASiteFields;
 
-    const fields_data = (await fields_res.json()) as _VSASiteFields;
+    if (fields_api.status != 200) {
+      return Response.json({
+        data: fields_data,
+        error: {
+          code: "INV_API",
+          message: "Failed to get SophosLink info",
+        }
+      })
+    }
+
     let site_link: Site = { name: "LINK", vsa_id: Number(site_id) };
 
     for (let i = 0; i < fields_data.Data.length; i++) {
@@ -27,9 +38,9 @@ export async function GET(req: Request, { params }: { params: { slug: string }})
       }
     }
 
-    return Response.json(site_link, { status: 200 });
+    return Response.json({ data: site_link }, { status: 200 });
   } 
   catch {
-    return Response.json("Failed to get computers", { status: 500 });
+    return Response.json({ error: { code: "EXT_ERR", message: "Failed to get SophosLink info" }}, { status: 500 });
   }
 }

@@ -1,10 +1,8 @@
 import { Device } from "@/app/lib/interfaces/agent/device";
 import { _SophosEndpoints, _SophosEndpointsError } from "@/app/lib/interfaces/sophos/endpoint";
-import APIView, { APIResponse } from "@/app/lib/tools/APIView";
+import APIView from "@/app/lib/tools/APIView";
 import { cookies } from "next/headers";
 import { NextRequest } from "next/server";
-
-
 
 export async function GET(req: NextRequest) {
   try {
@@ -17,45 +15,41 @@ export async function GET(req: NextRequest) {
         return Response.json("Invalid headers", { status: 301 });
       }
 
-      const device_res = await fetch(`https://${sophos_url}/endpoint/v1/endpoints`, {
+      const api = new APIView(`https://${sophos_url}/endpoint/v1/endpoints`);
+      const res_data = await api.request_external({
         method: "GET",
         headers: {
           "Authorization": `Bearer ${jwt_token.value}`,
           "X-Tenant-ID": sophos_id
         }
-      });
+      }) as _SophosEndpoints;
 
-      const api = new APIView;
-      const devices_res = await api.request_external<_SophosEndpoints, _SophosEndpointsError>(`https://${sophos_url}/endpoint/v1/endpoints`,{
-        method: "GET",
-        headers: {
-          "Authorization": `Bearer ${jwt_token.value}`,
-          "X-Tenant-ID": ""
-        }
-      }, (err) => {
+      if (api.status != 200) {
         return Response.json({ 
+          data: res_data,
           error: { 
-            code: err.code, 
-            message: err.error, 
-            display: "Failed to find Endpoints for Sophos. Contact Administrator." 
+            code: "INV_API_RES", 
+            message: "Sophos Endpoint failure", 
+            display: "Failed to find devices for Sophos. Contact Administrator." 
           } 
         }, { status: 500 });
-      });
-
-      let device_list: Device[] = [];
-      const device_data = await device_res.json() as _SophosEndpoints;
-      for (let i = 0; i < device_data.items.length; i++) {
-        const device_type: string = device_data.items[i].type === "server" ? "Server" : "Workstation"; 
-        device_list.push({ name: device_data.items[i].hostname, os: device_type, sophos_id: device_data.items[i].id });
       }
-
+      
+      let device_list: Device[] = [];
+      if (res_data.items) {
+        for (let i = 0; i < res_data.items.length; i++) {
+          const device_type: string = res_data.items[i].type === "server" ? "Server" : "Workstation"; 
+          device_list.push({ name: res_data.items[i].hostname, os: device_type, sophos_id: res_data.items[i].id });
+        }
+      }
+      
       return Response.json({ data: device_list }, { status: 200 });
     }
     else {
-      return Response.json("Token was not found", { status: 300 });
+      return Response.json({ error: { code: "INV_SOP_TOK", message: "Token was not found" } }, { status: 500 });
     }
   } 
   catch {
-    return Response.json("Failed to get devices", { status: 500 });
+    return Response.json({ error: { code: "INT_ERR", message: "Unknown error" } }, { status: 500 });
   }
 }

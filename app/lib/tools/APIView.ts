@@ -10,38 +10,32 @@ interface APIError {
 }
 
 export default class APIView {
-  responses: APIResponse[] = [];
-  
-  async request_internal(url: string, req: RequestInit): Promise<APIResponse> {
-    const res = await fetch(url, req);
-    if (!res.ok) {
-      const err_data = await res.json() as APIResponse;
-      console.log(err_data.error?.message);
-      return err_data;
-    }
-    
-    const res_data = await res.json() as APIResponse;
-    this.responses.push(res_data);
-    return res_data;
-  }
+  url: string;
+  status: number = 0;
+  response: APIResponse = {};
 
-  post_errors() {
-    for (let i = 0; i < this.responses.length; i++) {
-      console.log(`${this.responses[i].error?.code}: ${this.responses[i].error?.message}`);
-    }
-
-    this.responses = [];
+  constructor(url: string) {
+    this.url = url;
   }
   
-  async request_external<T, E>(url: string, req: RequestInit, errorCallback: (err: E) => void): Promise<T | undefined> {
-    const res = await fetch(url, req);
+  async request_internal(req: RequestInit): Promise<any> {
+    const res = await fetch(this.url, req);
+    this.status = res.status;
+    this.response = await res.json() as APIResponse;
+    return this.response.data;
+  }
+
+  async request_external(req: RequestInit): Promise<any> {
+    const res = await fetch(this.url, req);
+    this.status = res.status;
     if (!res.ok) {
-      const err_data = await res.json() as E;
-      errorCallback(err_data);
-      return undefined;
+      this.response.error = {
+        code: "EXT_ERR",
+        message: "Failed to retrieve API data"
+      }
     }
 
-    const res_data = await res.json() as T;
-    return res_data;
+    this.response.data = await res.json();
+    return this.response.data;
   }
 }

@@ -65,6 +65,7 @@ export default class AgentClient {
         else {
           const sophos_device_data = sophos_device_res.data as Device[];
 
+          console.log(sophos_device_res)
           for (let i = 0; i < sophos_device_data.length; i++) {
             const device = device_list.devices.find(value => value.name.toLowerCase() === sophos_device_data[i].name.toLowerCase());
             if (device) {

@@ -14,10 +14,10 @@ export interface _SophosEndpointsError {
   error: string,
   message?: string,
   correlationId: string,
-  code: string,
-  createdAt: string,
+  code?: string,
+  createdAt?: string,
   requestId: string,
-  docUrl: string
+  docUrl?: string
 }
 
 interface Endpoint {
