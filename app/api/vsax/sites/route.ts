@@ -5,6 +5,9 @@ const vsa_auth = btoa(`${process.env.VSA_ID}:${process.env.VSA_SC}`);
 
 export async function GET(req: Request) {
   try {
+    console.log(process.env.VSA_ID)
+    console.log(process.env.VSA_SC)
+
     let site_list: Site[] = [];
     while (site_list.length < 300) {
       const res = await fetch(`${vsa_url}/api/v3/sites?&$skip=${site_list.length}`, {
