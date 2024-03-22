@@ -16,7 +16,6 @@ export async function GET(req: Request) {
       });
       
       const data = await res.json() as _VSASiteData;
-      console.log(data);
       
       for (let i = 0; i < data.Data.length; i++) {
         let site_name = data.Data[i].Name;
@@ -32,7 +31,6 @@ export async function GET(req: Request) {
       }
     }
 
-    console.log(site_list);
     return Response.json(site_list.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()) ), { status: 200 });
   }
   catch {

@@ -1,5 +1,6 @@
 import { Device, DeviceList } from "./interfaces/agent/device";
 import { Site, _VSASiteData } from "./interfaces/agent/site";
+import APIView from "./tools/APIView";
 
 export default class AgentClient {
   private cached_site_list: Site[] = [];
@@ -50,20 +51,27 @@ export default class AgentClient {
       device_list.devices = (await vsa_device_res.json()) as Device[];
 
       if (site.sophos_url && site.sophos_id) {
-        const sophos_device_res = await fetch(`/api/sophos/devices`, {
+        const api: APIView = new APIView;
+        const sophos_device_res = await api.request_internal("/api/sophos/devices", {
           headers: {
             "x-tenant-id": `${site.sophos_id}`,
             "x-tenant-url": `${site.sophos_url}`
           }
         });
-        const sophos_device_data = (await sophos_device_res.json()) as Device[];
 
-        for (let i = 0; i < sophos_device_data.length; i++) {
-          const device = device_list.devices.find(value => value.name.toLowerCase() === sophos_device_data[i].name.toLowerCase());
-          if (device) {
-            device.sophos_id = sophos_device_data[i].sophos_id;
-          } else {
-            device_list.devices.push(sophos_device_data[i]);
+        if (sophos_device_res.error) {
+          api.post_errors();
+        }
+        else {
+          const sophos_device_data = sophos_device_res.data as Device[];
+
+          for (let i = 0; i < sophos_device_data.length; i++) {
+            const device = device_list.devices.find(value => value.name.toLowerCase() === sophos_device_data[i].name.toLowerCase());
+            if (device) {
+              device.sophos_id = sophos_device_data[i].sophos_id;
+            } else {
+              device_list.devices.push(sophos_device_data[i]);
+            }
           }
         }
       }
