@@ -8,7 +8,7 @@ export async function GET(req: Request, { params }: { params: { slug: string }})
   try {
     const site_id = params.slug;
     const fields_api = new APIView(`${vsa_url}/api/v3/sites/${site_id}/customfields`);
-    const fields_data = await fields_api.request_external({
+    const fields_data = await fields_api.request({
       method: "GET",
       headers: {
         "authorization": `Basic ${vsa_auth}`,
@@ -23,7 +23,7 @@ export async function GET(req: Request, { params }: { params: { slug: string }})
           code: "INV_API",
           message: "Failed to get SophosLink info",
         }
-      })
+      }, { status: 500 })
     }
 
     let site_link: Site = { name: "LINK", vsa_id: Number(site_id) };

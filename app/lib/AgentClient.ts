@@ -1,6 +1,6 @@
 import { Device, DeviceList } from "./interfaces/agent/device";
 import { Site, _VSASiteData } from "./interfaces/agent/site";
-import APIView from "./tools/APIView";
+import APIView, { APIResponse } from "./tools/APIView";
 
 export default class AgentClient {
   private cached_site_list: Site[] = [];
@@ -12,11 +12,12 @@ export default class AgentClient {
   async get_sites(): Promise<Site[]> {
     this.validate_cache();
     if (this.cached_site_list.length <= 0) {
-      const site_api = await fetch('/api/vsax/sites', {
+      const site_api = new APIView("/api/vsax/sites");
+      const site_data = await site_api.request({
         method: "GET",
-      });
+      }) as APIResponse;
 
-      this.cached_site_list = await site_api.json() as Site[];
+      this.cached_site_list = site_data.data as Site[];
     }
     
     return this.cached_site_list;
@@ -36,36 +37,36 @@ export default class AgentClient {
 
     // Update Sophos_Link info and update cached site
     if (!site.sophos_id || !site.sophos_url) {
-      const link_res = await fetch(`/api/vsax/sophos_link/${site.vsa_id}`);
-      const link_data = (await link_res.json()) as Site;
-      site.sophos_id = link_data.sophos_id;
-      site.sophos_url = link_data.sophos_url;
+      const link_api = new APIView(`/api/vsax/sophos_link/${site.vsa_id}`);
+      const link_data = await link_api.request() as APIResponse;
+      site.sophos_id = link_data.data.sophos_id;
+      site.sophos_url = link_data.data.sophos_url;
       const site_ref = this.cached_site_list.find(value => value.name === site.name) || { name: site.name, vsa_id: site.vsa_id };
-      site_ref.sophos_id = link_data.sophos_id;
-      site_ref.sophos_url = link_data.sophos_url;
+      site_ref.sophos_id = link_data.data.sophos_id;
+      site_ref.sophos_url = link_data.data.sophos_url;
     }
 
     const device_list: DeviceList = this.cached_device_list.find(value => value.site_name === site.name) || { site_name: site.name, devices: [], rogue_devices: 0 };
     if (device_list.devices.length <= 0) {
-      const vsa_device_res = await fetch(`/api/vsax/devices/${site.vsa_id}`);
-      device_list.devices = (await vsa_device_res.json()) as Device[];
+      const vsa_device_api = new APIView(`/api/vsax/devices/${site.vsa_id}`);
+      const vsa_device_data = await vsa_device_api.request() as APIResponse;
+      device_list.devices = vsa_device_data.data as Device[];
 
       if (site.sophos_url && site.sophos_id) {
-        const api: APIView = new APIView;
-        const sophos_device_res = await api.request_internal("/api/sophos/devices", {
+        const sophos_api: APIView = new APIView("/api/sophos/devices");
+        const sophos_data = await sophos_api.request({
           headers: {
             "x-tenant-id": `${site.sophos_id}`,
             "x-tenant-url": `${site.sophos_url}`
           }
-        });
+        }) as APIResponse;
 
-        if (sophos_device_res.error) {
-          api.post_errors();
+        if (sophos_api.status != 200) {
+          sophos_api.post_error(sophos_data);
         }
         else {
-          const sophos_device_data = sophos_device_res.data as Device[];
+          const sophos_device_data = sophos_data.data as Device[];
 
-          console.log(sophos_device_res)
           for (let i = 0; i < sophos_device_data.length; i++) {
             const device = device_list.devices.find(value => value.name.toLowerCase() === sophos_device_data[i].name.toLowerCase());
             if (device) {
@@ -89,13 +90,9 @@ export default class AgentClient {
   }
 
   private async get_token(): Promise<void> {
-    const api_data = await fetch('/api/sophos/token');
-    if (api_data.status === 200) {
-      this.token_generated = true;
-    }
-    else {
-      this.token_generated = false;
-    }
+    const api = new APIView("/api/sophos/token");
+    const api_data = await api.request() as APIResponse; // Data is stored in cookies
+    this.token_generated = api.status === 200;
   }
 
   private async validate_token(): Promise<boolean> {

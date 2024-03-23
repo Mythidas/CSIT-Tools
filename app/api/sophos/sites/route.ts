@@ -8,7 +8,7 @@ export async function GET(req: NextRequest) {
     const partner_token = cookies().get("partner_token");
     if (jwt_token && partner_token) {
       const api = new APIView("https://api.central.sophos.com/partner/v1/tenants?pageTotal=true");
-      const res_data = api.request_external({
+      const res_data = api.request({
         method: "GET",
         headers: {
           "Authorization": `Bearer ${jwt_token.value}`,

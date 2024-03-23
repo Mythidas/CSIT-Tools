@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
     });
 
     const token_api = new APIView("https://id.sophos.com/api/v2/oauth2/token");
-    const token_data = await token_api.request_external({
+    const token_data = await token_api.request({
       method: "POST",
       headers: {
         "content-type": "application/x-www-form-urlencoded"
@@ -34,11 +34,11 @@ export async function GET(req: NextRequest) {
           message: "Failed to get Sophos Token",
           display: "Failed to validate Sophos. Contact Administrator."
         }
-      })
+      }, { status: 500 })
     }
 
     const partner_api = new APIView("https://api.central.sophos.com/whoami/v1");
-    const partner_data = await partner_api.request_external({
+    const partner_data = await partner_api.request({
       method: "GET",
       headers: {
         "Authorization": `Bearer ${token_data.access_token}`
@@ -53,7 +53,7 @@ export async function GET(req: NextRequest) {
           message: "Failed to get Sophos Partner ID",
           display: "Failed to find Sophos account. Contact Administrator."
         }
-      })
+      }, { status: 500 })
     }
 
     cookies().set("partner_token", partner_data.id, {

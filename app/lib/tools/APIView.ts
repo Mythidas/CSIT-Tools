@@ -7,35 +7,36 @@ interface APIError {
   code: string,
   message: string,
   display?: string // Optional message to display to users
+  object?: any // Optional data to be passed
 }
 
 export default class APIView {
   url: string;
   status: number = 0;
-  response: APIResponse = {};
+  private is_local: boolean;
 
   constructor(url: string) {
     this.url = url;
-  }
-  
-  async request_internal(req: RequestInit): Promise<any> {
-    const res = await fetch(this.url, req);
-    this.status = res.status;
-    this.response = await res.json() as APIResponse;
-    return this.response.data;
+    this.is_local = url.charAt(0) === '/';
   }
 
-  async request_external(req: RequestInit): Promise<any> {
+  async request(req?: RequestInit): Promise<any> {
     const res = await fetch(this.url, req);
     this.status = res.status;
-    if (!res.ok) {
-      this.response.error = {
-        code: "EXT_ERR",
-        message: "Failed to retrieve API data"
-      }
+    const res_data = await res.json();
+
+    if (res.status !== 200 && this.is_local) {
+      this.post_error(res_data);
     }
 
-    this.response.data = await res.json();
-    return this.response.data;
+    return res_data;
+  }
+
+  post_error(res: APIResponse) {
+    console.log(`${res.error?.code}: ${res.error?.message}`);
+    if (res.error?.object) {
+      console.log("Obj Dump: ");
+      console.log(res.error.object);
+    }
   }
 }

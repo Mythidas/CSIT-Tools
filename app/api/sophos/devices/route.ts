@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
       }
 
       const api = new APIView(`https://${sophos_url}/endpoint/v1/endpoints`);
-      const res_data = await api.request_external({
+      const res_data = await api.request({
         method: "GET",
         headers: {
           "Authorization": `Bearer ${jwt_token.value}`,

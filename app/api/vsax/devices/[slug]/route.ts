@@ -9,7 +9,7 @@ export async function GET(req: Request, { params }: { params: { slug: string }})
     let device_list: Device[] = [];
     const site_id = params.slug;
     const api = new APIView(`${vsa_url}/api/v3/devices?&$filter=SiteId eq ${site_id}`);
-    const api_data = await api.request_external({
+    const api_data = await api.request({
       method: "GET",
       headers: {
         "authorization": `Basic ${vsa_auth}`,
@@ -25,7 +25,7 @@ export async function GET(req: Request, { params }: { params: { slug: string }})
           message: "Failed to get VSA devices",
           display: "Failed to get VSA devices. Contact Administrator."
         }
-      })
+      }, { status: 500 })
     }
 
     const device_data = api_data.Data as _VSADeviceInfo[];

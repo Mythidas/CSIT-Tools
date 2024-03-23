@@ -9,7 +9,7 @@ export async function GET(req: Request) {
     let site_list: Site[] = [];
     while (site_list.length < 300) {
       const api = new APIView(`${vsa_url}/api/v3/sites?&$skip=${site_list.length}`);
-      const res_data = await api.request_external({
+      const res_data = await api.request({
         method: "GET",
         headers: {
           "authorization": `Basic ${vsa_auth}`,
@@ -23,9 +23,10 @@ export async function GET(req: Request) {
           error: {
             code: "INV_API",
             message: "Failed to get VSA sites",
-            display: "Failed to find VSA Sites. Contact Administrator."
+            display: "Failed to find VSA Sites. Contact Administrator.",
+            object: res_data
           }
-        })
+        }, { status: 500 })
       }
       
       for (let i = 0; i < res_data.Data.length; i++) {
