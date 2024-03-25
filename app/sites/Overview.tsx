@@ -102,6 +102,14 @@ const Overview: React.FC<OverviewProps> = ({ agent, site }) => {
     return <ExcelSheet dataSet={[data_set]} name={`${device_list?.site_name}`} />
   }
 
+  async function live_refresh() {
+    if (site) {
+      set_device_list(undefined);
+      const device_data = await agent.refresh_devices(site);
+      set_device_list(device_data);
+    }
+  }
+
   if (!site) {
     return <div></div>
   }
@@ -110,6 +118,8 @@ const Overview: React.FC<OverviewProps> = ({ agent, site }) => {
     <div className="flex flex-col h-5/6">
       <div className="flex pb-4 gap-3 font-bold"> 
         <p className="text-3xl">Summary</p>
+        {device_list && 
+        <button className="bg-cscol-200 px-3 py-1 rounded-md text-xl" onClick={live_refresh}>Live Refresh</button>}
         {device_list && 
         <ExcelFile filename={`Overview - ${site.name}`} element={<button className="bg-cscol-200 px-3 py-1 rounded-md text-xl">Export Table</button>}>
           {export_table()}
@@ -120,7 +130,9 @@ const Overview: React.FC<OverviewProps> = ({ agent, site }) => {
         <div className="bg-cscol-100 p-2">Unique Computers: {device_list?.devices.length}</div>
         <div className={`${device_list && device_list.rogue_devices === 0 ? "bg-cscol-100" : "bg-errcol-100 text-cscol-100"} p-2`}>Matching Computers: {device_list && (device_list?.devices.length - device_list?.rogue_devices)}</div>
       </div>
-      <p className="font-bold text-3xl py-4">Devices</p>
+      <div className="flex font-bold text-3xl py-4">
+        Devices
+      </div>
       {device_list && <div className="flex w-full h-5/6 overflow-y-auto">
         <table className="table-auto border-separate w-full h-fit text-cscol-500 text-center">
           <thead className="sticky top-0">

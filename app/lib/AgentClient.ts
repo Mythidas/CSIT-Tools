@@ -27,8 +27,15 @@ export default class AgentClient {
   async get_sophos_sites(): Promise<Site[]> {
     if (!await this.validate_token()) return [];
 
-    
-    return [];
+    const site_api = new APIView("/api/sophos/sites");
+    const site_data = await site_api.request() as APIResponse;
+
+    if (site_api.status !== 200) {
+      return [];
+    }
+
+    this.cached_site_list = site_data.data as Site[];
+    return this.cached_site_list;
   }
 
   async get_devices(site: Site): Promise<DeviceList> {
@@ -37,7 +44,7 @@ export default class AgentClient {
 
     // Update Sophos_Link info and update cached site
     if (!site.sophos_id || !site.sophos_url) {
-      const link_api = new APIView(`/api/vsax/sophos_link/${site.vsa_id}`);
+      const link_api = new APIView(`/api/vsax/sophos_link/site/${site.vsa_id}`);
       const link_data = await link_api.request() as APIResponse;
       site.sophos_id = link_data.data.sophos_id;
       site.sophos_url = link_data.data.sophos_url;
@@ -61,10 +68,7 @@ export default class AgentClient {
           }
         }) as APIResponse;
 
-        if (sophos_api.status != 200) {
-          sophos_api.post_error(sophos_data);
-        }
-        else {
+        if (sophos_api.status == 200) {
           const sophos_device_data = sophos_data.data as Device[];
 
           for (let i = 0; i < sophos_device_data.length; i++) {
@@ -87,6 +91,18 @@ export default class AgentClient {
 
     device_list.devices.sort((a, b) => a.os.toLowerCase().localeCompare(b.os.toLowerCase()));
     return device_list;
+  }
+
+  async refresh_devices(site: Site): Promise<DeviceList> {
+    const device_list: DeviceList | undefined = this.cached_device_list.find(value => value.site_name === site.name);
+    if (device_list) {
+      device_list.devices = [];
+      device_list.rogue_devices = 0;
+    }
+
+    site.sophos_id = undefined;
+    site.sophos_url = undefined;
+    return await this.get_devices(site);
   }
 
   private async get_token(): Promise<void> {

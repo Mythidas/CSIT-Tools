@@ -1,12 +1,12 @@
 "use client"
 
 import { useRef, useState } from "react";
-import DeviceReports from "./DeviceReports";
 import AgentClient from "../lib/AgentClient";
 import { useEffectOnce } from "../lib/hooks/useEffectOnce";
+import SophosInfo from "./SophosInfo";
 
 export default function Sites() {
-  const [selected_tab, set_selected_tab] = useState<string>("Device Reports");
+  const [selected_tab, set_selected_tab] = useState<string>("Sophos Info");
 
   const agent_client = useRef<AgentClient>(new AgentClient);
 
@@ -34,13 +34,13 @@ export default function Sites() {
       <div className="flex w-full h-full">
         { /* Side Bar */ }
         <ul className="flex items-center flex-col w-2/12 h-full bg-cscol-100 text-cscol-500 text-lg font-bold">
-          <li className={`p-5 w-full text-center shadow-md cursor-pointer hover:bg-cscol-300 ${selected_tab === "Device Reports" && "bg-cscol-400 text-cscol-100 hover:bg-cscol-400"}`} onClick={() => set_selected_tab("Device Reports")}>
-            Device Reports
+          <li className={`p-5 w-full text-center shadow-md cursor-pointer hover:bg-cscol-300 ${selected_tab === "Sophos Info" && "bg-cscol-400 text-cscol-100 hover:bg-cscol-400"}`} onClick={() => set_selected_tab("Sophos Info")}>
+            Sophos Info
           </li>
         </ul>
         { /* Main Page */ }
         <div className="py-5 px-10 w-full h-full shadow-[inset_0_-2px_6px_rgba(0,0,0,0.4)]">
-          {selected_tab === "Device Reports" && <DeviceReports agent={agent_client.current} />}
+          {selected_tab === "Sophos Info" && <SophosInfo agent={agent_client.current} />}
         </div>
       </div>
     </main>

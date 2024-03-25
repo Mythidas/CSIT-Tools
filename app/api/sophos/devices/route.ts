@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
     const jwt_token = cookies().get("jwt_token");
     if (jwt_token) {
       const sophos_id = req.headers.get("x-tenant-id");
-      const sophos_url = req.headers.get("x-tenant-url");
+      const sophos_url = req.headers.get("x-tenant-url")?.replace("https://", "");
 
       if (!sophos_id || !sophos_url) {
         return Response.json("Invalid headers", { status: 301 });
@@ -50,6 +50,6 @@ export async function GET(req: NextRequest) {
     }
   } 
   catch {
-    return Response.json({ error: { code: "INT_ERR", message: "Unknown error" } }, { status: 500 });
+    return Response.json({ error: { code: "INT_ERR", message: "Unknown error (Sophos/Devices)" } }, { status: 500 });
   }
 }

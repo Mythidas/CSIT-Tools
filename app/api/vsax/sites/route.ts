@@ -19,7 +19,6 @@ export async function GET(req: Request) {
 
       if (api.status != 200) {
         return Response.json({
-          data: res_data,
           error: {
             code: "INV_API",
             message: "Failed to get VSA sites",

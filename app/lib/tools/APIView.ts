@@ -24,11 +24,11 @@ export default class APIView {
     const res = await fetch(this.url, req);
     this.status = res.status;
     const res_data = await res.json();
-
+    
     if (res.status !== 200 && this.is_local) {
       this.post_error(res_data);
     }
-
+    
     return res_data;
   }
 
