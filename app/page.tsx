@@ -9,6 +9,9 @@ export default function Home() {
           Sites
         </a>
       </div>
+      <div className="absolute bottom-0 left-3">
+        Icons by <a href="https://icons8.com">Icons8</a>
+      </div>
     </main>
   );
 }

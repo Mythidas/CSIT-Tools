@@ -8,6 +8,8 @@ import { DeviceList } from "../lib/interfaces/agent/device"
 import { ExcelFile, ExcelSheet, ExcelSheetData, ExcelStyle } from "react-xlsx-wrapper"
 import Loading from "../lib/components/Loading"
 
+const VSA_URL = "https://centriserve-it.vsax.net/app/main/systems/";
+
 interface OverviewProps {
   agent: AgentClient
   site?: Site
@@ -148,8 +150,15 @@ const Overview: React.FC<OverviewProps> = ({ agent, site }) => {
               device_list.devices.map((device, index) => (
                 <tr key={index} className="even:bg-cscol-300 odd:bg-cscol-100 text-xl font-bold">
                   <td key={(device.name + "0")}>{device.name}</td>
-                  <td className={`${device.vsa_id ? "" : "text-errcol-100"}`} key={(device.name + "1")}>{device.vsa_id ? "YES" : "NO"}</td>
-                  <td className={`${device.sophos_id ? "" : "text-errcol-100"}`} key={(device.name + "2")}>{device.sophos_id ? "YES" : "NO"}</td>
+                  <td className={`${device.vsa_id ? "" : "text-errcol-100"} flex items-center text-center`} key={(device.name + "1")}>
+                    {device.vsa_id ? 
+                    <a className="flex m-auto text-center hover:text-cscol-400" href={`${VSA_URL}${device.vsa_id}/details`} target="_blank">
+                      YES <img className="object-contain h-5 w-5" src="/link-100.png" />
+                    </a> : <p className="flex m-auto">NO</p> }
+                  </td>
+                  <td className={`${device.sophos_id ? "" : "text-errcol-100"}`} key={(device.name + "2")}>
+                    {device.sophos_id ? "YES" : "NO"}
+                  </td>
                   <td key={(device.name + "3")}>{device.os}</td>
                 </tr>
               ))
