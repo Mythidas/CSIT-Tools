@@ -153,7 +153,7 @@ const Overview: React.FC<OverviewProps> = ({ agent, site }) => {
                   <td className={`${device.vsa_id ? "" : "text-errcol-100"} flex items-center text-center`} key={(device.name + "1")}>
                     {device.vsa_id ? 
                     <a className="flex m-auto text-center hover:text-cscol-400" href={`${VSA_URL}${device.vsa_id}/details`} target="_blank">
-                      YES <img className="object-contain h-5 w-5" src="/link-100.png" />
+                      YES <img className="object-contain h-5 w-6 pl-1 m-auto" src="/link-96.png" />
                     </a> : <p className="flex m-auto">NO</p> }
                   </td>
                   <td className={`${device.sophos_id ? "" : "text-errcol-100"}`} key={(device.name + "2")}>
