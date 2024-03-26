@@ -102,7 +102,7 @@ const Overview: React.FC<OverviewProps> = ({ agent, site }) => {
       }
     }
 
-    return <ExcelSheet dataSet={[data_set]} name={`${device_list?.site_name}`} />
+    return <ExcelSheet dataSet={[data_set]} name={`Devices`} />
   }
 
   async function live_refresh() {
@@ -124,7 +124,7 @@ const Overview: React.FC<OverviewProps> = ({ agent, site }) => {
         {device_list && 
         <button className="bg-cscol-200 px-3 py-1 rounded-md text-xl" onClick={live_refresh}>Live Refresh</button>}
         {device_list && 
-        <ExcelFile filename={`Overview - ${site.name}`} element={<button className="bg-cscol-200 px-3 py-1 rounded-md text-xl">Export Table</button>}>
+        <ExcelFile filename={`${site.name} - Overview`} element={<button className="bg-cscol-200 px-3 py-1 rounded-md text-xl">Export Table</button>}>
           {export_table()}
         </ExcelFile>}
       </div>
@@ -154,7 +154,7 @@ const Overview: React.FC<OverviewProps> = ({ agent, site }) => {
                   <td className={`${device.vsa_id ? "" : "text-errcol-100"} flex items-center text-center`}>
                     {device.vsa_id ? 
                     <a className="flex m-auto text-center hover:text-cscol-400" href={`${VSA_URL}${device.vsa_id}/details`} target="_blank">
-                      YES <Image className="object-contain h-5 w-6 pl-1 m-auto" src="/link-96.png" alt="" />
+                      YES <Image className="object-contain pl-1 m-auto" height={24} width={24} src="/link-96.png" alt="" />
                     </a> : <p className="flex m-auto">NO</p> }
                   </td>
                   <td className={`${device.sophos_id ? "" : "text-errcol-100"}`}>

@@ -56,6 +56,7 @@ export async function GET(req: NextRequest) {
       }, { status: 500 })
     }
 
+    // TODO: Make these secure again
     cookies().set("partner_token", partner_data.id, {
       maxAge: 3600,
       httpOnly: true,

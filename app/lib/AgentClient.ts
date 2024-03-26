@@ -51,7 +51,6 @@ export default class AgentClient {
       const site_ref = this.cached_site_list.find(value => value.name === site.name) || { name: site.name, vsa_id: site.vsa_id };
       site_ref.sophos_id = link_data.data.sophos_id;
       site_ref.sophos_url = link_data.data.sophos_url;
-      console.log(link_data);
     }
 
     const device_list: DeviceList = this.cached_device_list.find(value => value.site_name === site.name) || { site_name: site.name, devices: [], rogue_devices: 0 };
