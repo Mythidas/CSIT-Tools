@@ -59,13 +59,13 @@ export async function GET(req: NextRequest) {
     cookies().set("partner_token", partner_data.id, {
       maxAge: 3600,
       httpOnly: true,
-      secure: process.env.NODE_ENV != "development",
+      secure: false,
       sameSite: "strict"
     })
     cookies().set("jwt_token", token_data.access_token, {
       maxAge: 3600,
       httpOnly: true,
-      secure: process.env.NODE_ENV != "development",
+      secure: false,
       sameSite: "strict"
     });
 
