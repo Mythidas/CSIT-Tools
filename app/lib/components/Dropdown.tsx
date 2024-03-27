@@ -25,6 +25,7 @@ const Dropdown: React.FC<DropdownProps> = ({ items, on_item_changed = null, blan
       if (e.target) {
         if (dropdown_open.current && !dropdown_ref.current?.contains(e.target as Node)) {
           set_show_list(false);
+          set_lookup_value("");
         }
       }
     };

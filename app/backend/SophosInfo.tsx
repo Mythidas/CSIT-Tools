@@ -5,6 +5,7 @@ import AgentClient from "../lib/AgentClient";
 import { useEffectOnce } from "../lib/hooks/useEffectOnce";
 import { Site } from "../lib/interfaces/agent/site";
 import { ExcelFile, ExcelSheet, ExcelSheetData, ExcelStyle } from "react-xlsx-wrapper";
+import Table, { TableCell, TableRow } from "../lib/components/Table";
 
 interface SophosInfoProps {
   agent: AgentClient;
@@ -17,7 +18,6 @@ const SophosInfo: React.FC<SophosInfoProps> = ({ agent }) => {
     async function get_site_data() {
       const sites = await agent.get_sophos_sites();
       set_sites(sites);
-      console.log(sites);
     }
 
     get_site_data();
@@ -73,6 +73,12 @@ const SophosInfo: React.FC<SophosInfoProps> = ({ agent }) => {
     return <ExcelSheet dataSet={[data_set]} name={`Sophos Sites`} />
   }
 
+  const table_header_config = [
+    { label: "Site", searchable: true }, 
+    { label: "Tenant ID" }, 
+    { label: "API Url" }
+  ];
+
   return (
     <div className="flex flex-col h-full">
       <div className="flex pb-4 gap-3 font-bold"> 
@@ -82,28 +88,20 @@ const SophosInfo: React.FC<SophosInfoProps> = ({ agent }) => {
           {export_table()}
         </ExcelFile>}
       </div>
-      <div className="flex w-full h-5/6 overflow-y-auto">
-        <table className="table-auto border-separate w-full h-fit text-cscol-500 text-center">
-          <thead className="sticky top-0">
-            <tr>
-              <th key={0} className="bg-cscol-200 text-cscol-100 p-1 text-xl font-bold">Site</th>
-              <th key={1} className="bg-cscol-200 text-cscol-100 p-1 text-xl font-bold">Tenant ID</th>
-              <th key={2} className="bg-cscol-200 text-cscol-100 p-1 text-xl font-bold">API Server</th>
-            </tr>
-          </thead>
-          <tbody className="text-cscol-500 text-center">
-            {sites && sites.map((site, index) => {
-              return (
-                <tr key={index} className="even:bg-cscol-300 odd:bg-cscol-100 text-xl font-bold">
-                  <td>{site.name}</td>
-                  <td>{site.sophos_id}</td>
-                  <td>{site.sophos_url}</td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
-      </div>
+      <Table headers={table_header_config} loading={sites.length === 0}>
+        {sites.map((site, index) => {
+          return (
+            <TableRow 
+              key={index} 
+              values={[ site.name, site.sophos_id || "", site.sophos_url || "" ]}
+            >
+              <TableCell>{site.name}</TableCell>
+              <TableCell>{site.sophos_id}</TableCell>
+              <TableCell>{site.sophos_url}</TableCell>
+            </TableRow>
+          )
+        })}
+      </Table>
     </div>
   )
 }
