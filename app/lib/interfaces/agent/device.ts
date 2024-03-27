@@ -2,7 +2,8 @@ export interface Device {
   name: string,
   os: string,
   vsa_id?: string,
-  sophos_id?: string
+  sophos_id?: string,
+  uptime?: number
 }
 
 export interface DeviceList {

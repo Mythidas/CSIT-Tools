@@ -57,22 +57,29 @@ const Overview: React.FC<OverviewProps> = ({ agent, site }) => {
           title: "OS", width: { wch: 15 }, 
           style: column_header_style
         },
+        { 
+          title: "Last Online", width: { wch: 25 }, 
+          style: column_header_style
+        },
       ],
       data: []
     };
 
     if (device_list) {
       for (let i = 0; i < device_list?.devices.length; i++) {
+        const uptime = device_list?.devices[i].uptime ? new Date(device_list?.devices[i].uptime || "").toLocaleString() : "Never"
         data_set.data.push([
           { 
             value: device_list.devices[i].name, 
             style: { 
+              alignment: { horizontal: "center" },
               font: { sz: 12 } 
             }
           },
           { 
             value: device_list.devices[i].vsa_id ? "YES" : "NO", 
-            style: { 
+            style: {
+              alignment: { horizontal: "center" },
               font: { sz: 12 }, 
               fill: { 
                 patternType: device_list.devices[i].vsa_id ? "none" : "solid", 
@@ -84,7 +91,8 @@ const Overview: React.FC<OverviewProps> = ({ agent, site }) => {
           },
           { 
             value: device_list.devices[i].sophos_id ? "YES" : "NO", 
-            style: { 
+            style: {
+              alignment: { horizontal: "center" },
               font: { sz: 12 }, 
               fill: { 
                 patternType: device_list.devices[i].sophos_id ? "none" : "solid", 
@@ -95,8 +103,12 @@ const Overview: React.FC<OverviewProps> = ({ agent, site }) => {
             }
           },
           { 
-            value: device_list.devices[i].os, 
-            style: { font: { sz: 12 } }
+            value: device_list.devices[i].os,
+            style: { font: { sz: 12 }, alignment: { horizontal: "center" } }
+          },
+          { 
+            value: uptime,
+            style: { font: { sz: 12 }, alignment: { horizontal: "center" } }
           },
         ])
       }
@@ -144,6 +156,7 @@ const Overview: React.FC<OverviewProps> = ({ agent, site }) => {
               <th key={1} className="bg-cscol-200 text-cscol-100 p-1 text-xl font-bold">VSAX</th>
               <th key={2} className="bg-cscol-200 text-cscol-100 p-1 text-xl font-bold">Sophos</th>
               <th key={3} className="bg-cscol-200 text-cscol-100 p-1 text-xl font-bold">OS</th>
+              <th key={3} className="bg-cscol-200 text-cscol-100 p-1 text-xl font-bold">Last Online</th>
             </tr>
           </thead>
           <tbody className="text-cscol-500 text-center">
@@ -161,6 +174,7 @@ const Overview: React.FC<OverviewProps> = ({ agent, site }) => {
                     {device.sophos_id ? "YES" : "NO"}
                   </td>
                   <td>{device.os}</td>
+                  <td>{device.uptime ? new Date(device.uptime).toLocaleString() : "Never"}</td>
                 </tr>
               ))
             }
