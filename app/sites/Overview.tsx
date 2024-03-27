@@ -58,7 +58,7 @@ const Overview: React.FC<OverviewProps> = ({ agent, site }) => {
           style: column_header_style
         },
         { 
-          title: "Last Online", width: { wch: 25 }, 
+          title: "Last Heartbeat", width: { wch: 25 }, 
           style: column_header_style
         },
       ],
@@ -156,7 +156,7 @@ const Overview: React.FC<OverviewProps> = ({ agent, site }) => {
               <th key={1} className="bg-cscol-200 text-cscol-100 p-1 text-xl font-bold">VSAX</th>
               <th key={2} className="bg-cscol-200 text-cscol-100 p-1 text-xl font-bold">Sophos</th>
               <th key={3} className="bg-cscol-200 text-cscol-100 p-1 text-xl font-bold">OS</th>
-              <th key={3} className="bg-cscol-200 text-cscol-100 p-1 text-xl font-bold">Last Online</th>
+              <th key={3} className="bg-cscol-200 text-cscol-100 p-1 text-xl font-bold">Last Heartbeat</th>
             </tr>
           </thead>
           <tbody className="text-cscol-500 text-center">
