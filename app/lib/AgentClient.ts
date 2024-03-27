@@ -46,11 +46,14 @@ export default class AgentClient {
     if (!site.sophos_id || !site.sophos_url) {
       const link_api = new APIView(`/api/vsax/sophos_link/site/${site.vsa_id}`);
       const link_data = await link_api.request() as APIResponse;
-      site.sophos_id = link_data.data.sophos_id;
-      site.sophos_url = link_data.data.sophos_url;
-      const site_ref = this.cached_site_list.find(value => value.name === site.name) || { name: site.name, vsa_id: site.vsa_id };
-      site_ref.sophos_id = link_data.data.sophos_id;
-      site_ref.sophos_url = link_data.data.sophos_url;
+      
+      if (link_api.ok()) {
+        site.sophos_id = link_data.data.sophos_id;
+        site.sophos_url = link_data.data.sophos_url;
+        const site_ref = this.cached_site_list.find(value => value.name === site.name) || { name: site.name, vsa_id: site.vsa_id };
+        site_ref.sophos_id = link_data.data.sophos_id;
+        site_ref.sophos_url = link_data.data.sophos_url;
+      }
     }
 
     const device_list: DeviceList = this.cached_device_list.find(value => value.site_name === site.name) || { site_name: site.name, devices: [], rogue_devices: 0 };

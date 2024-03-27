@@ -39,4 +39,8 @@ export default class APIView {
       console.log(res.error.object);
     }
   }
+
+  ok(): boolean {
+    return this.status === 200;
+  }
 }

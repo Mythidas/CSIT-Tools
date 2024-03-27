@@ -9,9 +9,10 @@ export interface DropdownItem {
 export interface DropdownProps {
   items: DropdownItem[];
   on_item_changed?: (item: DropdownItem) => void;
+  blank_text?: string;
 }
 
-const Dropdown: React.FC<DropdownProps> = ({ items, on_item_changed = null }) => {
+const Dropdown: React.FC<DropdownProps> = ({ items, on_item_changed = null, blank_text = "Choose Option" }) => {
   const [current_item, set_current_item] = useState<DropdownItem | null>(items[0]);
   const [show_list, set_show_list] = useState<boolean>(false);
   const [lookup_value, set_lookup_value] = useState<string>("");
@@ -57,7 +58,7 @@ const Dropdown: React.FC<DropdownProps> = ({ items, on_item_changed = null }) =>
       {!show_list && 
       <button className="bg-cscol-400 text-cscol-100 hover:bg-cscol-500 shadow-md w-full h-full p-2 rounded-sm" onClick={toggle_list}>
         {current_item && current_item.label}
-        {!current_item && "Choose Option"}
+        {!current_item && blank_text}
       </button>}
       {show_list && 
       <input className="text-cscol-500 shadow-md p-2 outline-none focus:border-cscol-500 border-2" placeholder={current_item?.label} onChange={lookup_change} autoFocus />}

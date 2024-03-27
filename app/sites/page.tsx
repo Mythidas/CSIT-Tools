@@ -45,7 +45,7 @@ export default function Computers() {
       { /* Nav Bar */ }
       <div className="flex justify-between w-full h-20 p-3 font-bold text-2xl text-accol-100 bg-cscol-200 text-cscol-100">
         <div>
-          <Dropdown items={site_list} on_item_changed={on_site_changed} />
+          <Dropdown items={site_list} on_item_changed={on_site_changed} blank_text="Choose Site" />
         </div>
         <div className="flex items-center">
           <a className="hover:text-cscol-400" href="/">
